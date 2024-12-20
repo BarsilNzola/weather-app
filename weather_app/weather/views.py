@@ -17,9 +17,14 @@ def weather_dashboard(request):
     })
 
 def award_badge(user, badge_name):
+    """
+    Awards a badge to a user if the badge doesn't already exist.
+    """
     if not Badge.objects.filter(user=user, badge_name=badge_name).exists():
         Badge.objects.create(user=user, badge_name=badge_name)
 
-# Example: Award "Weather Guru" badge
-if request.user.is_authenticated:
-    award_badge(request.user, "Weather Guru")
+# Example: Call this inside a view function
+def dashboard(request):
+    if request.user.is_authenticated:
+        award_badge(request.user, "Weather Guru")
+    return render(request, "dashboard.html")
