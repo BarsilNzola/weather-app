@@ -1,31 +1,46 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
 <div class="container mt-5">
     <h1 class="text-center">Weather Dashboard</h1>
     
-    <!-- Weather Summary -->
-    <div class="row my-4">
-        <div class="col-md-6">
-            <h3>Current Weather in {{ location }}</h3>
-            <img id="weather-icon" src="{% static 'icons/sunny.png' %}" alt="Weather Icon" class="mb-3">
-            <p>
-                <strong>Temperature:</strong> 
-                <span id="temperature" data-temp="{{ weather.main.temp }}" data-unit="C">
-                    {{ weather.main.temp }}° C
-                </span>
-                <button class="btn btn-sm btn-outline-secondary toggle-temp">Switch to Fahrenheit</button>
-            </p>
-            <p><strong>Condition:</strong> {{ weather.weather[0].description }}</p>
-            <p><strong>Humidity:</strong> {{ weather.main.humidity }}%</p>
-            <p><strong>Wind Speed:</strong> {{ weather.wind.speed }} m/s</p>
+    <!-- City Selection Form -->
+    <form method="post" class="my-3">
+        {% csrf_token %}
+        <div class="input-group">
+            <input type="text" name="city" class="form-control" placeholder="Enter a city..." value="{{ city }}">
+            <button class="btn btn-primary" type="submit">Get Weather</button>
         </div>
-        <div class="col-md-6">
-            <h3>Weather-Driven Recommendations</h3>
-            <p><strong>Clothing:</strong> {{ recommendations.clothing }}</p>
-            <p><strong>Activities:</strong> {{ recommendations.activities }}</p>
-            <p><strong>Travel Tip:</strong> {{ recommendations.travel }}</p>
+    </form>
+
+    {% if error_message %}
+        <div class="alert alert-danger">{{ error_message }}</div>
+    {% else %}
+        <!-- Weather Summary -->
+        <div class="row my-4">
+            <div class="col-md-6">
+                <h3>Current Weather in {{ location }}</h3>
+                <img id="weather-icon" src="http://openweathermap.org/img/wn/{{ weather.weather.0.icon }}@2x.png" alt="Weather Icon" class="mb-3">
+                <p>
+                    <strong>Temperature:</strong> 
+                    <span id="temperature" data-temp="{{ weather.main.temp }}" data-unit="C">
+                        {{ weather.main.temp }}° C
+                    </span>
+                    <button class="btn btn-sm btn-outline-secondary toggle-temp">Switch to Fahrenheit</button>
+                </p>
+                <p><strong>Condition:</strong> {{ weather.weather.0.description }}</p>
+                <p><strong>Humidity:</strong> {{ weather.main.humidity }}%</p>
+                <p><strong>Wind Speed:</strong> {{ weather.wind.speed }} m/s</p>
+            </div>
+            <div class="col-md-6">
+                <h3>Weather-Driven Recommendations</h3>
+                <p><strong>Clothing:</strong> {{ recommendations.clothing }}</p>
+                <p><strong>Activities:</strong> {{ recommendations.activities }}</p>
+                <p><strong>Travel Tip:</strong> {{ recommendations.travel }}</p>
+            </div>
         </div>
-    </div>
+    {% endif %}
+
 
     <!-- Gamification Badges -->
     <div class="my-4">
@@ -39,18 +54,22 @@
     <!-- Interactive Weather Map -->
     <div class="my-4 text-center">
         <button id="toggle-map" class="btn btn-primary">Toggle Weather Map</button>
-        <div id="weather-map" class="hidden mt-3">
-            <img src="{% static 'maps/weather_map.png' %}" alt="Weather Map" class="img-fluid">
-        </div>
+        <div id="weather-map"
+        data-latitude="{{ latitude|default:'0'|safe }}"
+        data-longitude="{{ longitude|default:'0'|safe }}"
+        class="hidden mt-3" style="height: 500px;"></div>
     </div>
 
+
     <!-- Historical Weather and Trends -->
-    <div class="my-4">
+    <div class="my-4" id="weather-history">
         <h3>Weather History & Predictions</h3>
-        <div id="weather-history">
-            <canvas id="weatherHistoryChart"></canvas>
-        </div>
+        <script id="historical-data" type="application/json">
+            {{ historical_data|escapejs }}
+        </script>
+        <canvas id="weatherHistoryChart"></canvas>
     </div>
+    
 
     <!-- Sustainability Tips -->
     <div class="my-4">

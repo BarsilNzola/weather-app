@@ -56,7 +56,7 @@ ROOT_URLCONF = 'weather_app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "templates"],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -126,4 +126,4 @@ STATICFILES_DIRS = [BASE_DIR / "weather_app/static"]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Weather API key
-WEATHER_API_KEY = '1ec80da2f999f39661250a14fedb3420'
+WEATHER_API_KEY = 'd184c6ee70b4c4c1bd15e1441c626086'
