@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Weather Dashboard</h1>
+    
+    <!-- Weather Summary -->
+    <div class="row my-4">
+        <div class="col-md-6">
+            <h3>Current Weather in {{ location }}</h3>
+            <img id="weather-icon" src="{% static 'icons/sunny.png' %}" alt="Weather Icon" class="mb-3">
+            <p>
+                <strong>Temperature:</strong> 
+                <span id="temperature" data-temp="{{ weather.main.temp }}" data-unit="C">
+                    {{ weather.main.temp }}° C
+                </span>
+                <button class="btn btn-sm btn-outline-secondary toggle-temp">Switch to Fahrenheit</button>
+            </p>
+            <p><strong>Condition:</strong> {{ weather.weather[0].description }}</p>
+            <p><strong>Humidity:</strong> {{ weather.main.humidity }}%</p>
+            <p><strong>Wind Speed:</strong> {{ weather.wind.speed }} m/s</p>
+        </div>
+        <div class="col-md-6">
+            <h3>Weather-Driven Recommendations</h3>
+            <p><strong>Clothing:</strong> {{ recommendations.clothing }}</p>
+            <p><strong>Activities:</strong> {{ recommendations.activities }}</p>
+            <p><strong>Travel Tip:</strong> {{ recommendations.travel }}</p>
+        </div>
+    </div>
+
+    <!-- Gamification Badges -->
+    <div class="my-4">
+        <h3>Your Achievements</h3>
+        <div>
+            <span class="badge badge-primary badge-lg pulse-badge">Weather Guru</span>
+            <span class="badge badge-secondary badge-lg pulse-badge">Storm Spotter</span>
+        </div>
+    </div>
+
+    <!-- Interactive Weather Map -->
+    <div class="my-4 text-center">
+        <button id="toggle-map" class="btn btn-primary">Toggle Weather Map</button>
+        <div id="weather-map" class="hidden mt-3">
+            <img src="{% static 'maps/weather_map.png' %}" alt="Weather Map" class="img-fluid">
+        </div>
+    </div>
+
+    <!-- Historical Weather and Trends -->
+    <div class="my-4">
+        <h3>Weather History & Predictions</h3>
+        <div id="weather-history">
+            <canvas id="weatherHistoryChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Sustainability Tips -->
+    <div class="my-4">
+        <h3>Sustainability Tips</h3>
+        <p>{{ sustainability_tips }}</p>
+    </div>
+
+    <!-- Weather Chatbot -->
+    <div class="my-4">
+        <h3>Ask the WeatherBot</h3>
+        <div class="chatbot-container">
+            <div id="chatbot-messages" class="chatbot-messages">
+                <!-- Chatbot messages will be dynamically added here -->
+            </div>
+            <input type="text" id="chatbot-input" class="form-control" placeholder="Ask a weather question...">
+            <button id="chatbot-send" class="btn btn-primary mt-2">Send</button>
+        </div>
+    </div>
+
+    <!-- Extreme Weather Alerts -->
+    <div id="extreme-weather-alert" data-alert-type="{{ alert_type }}" class="my-4"></div>
+
+    <!-- Localized Weather Reports -->
+    <div class="my-4">
+        <h3>Community Weather Reports</h3>
+        <button class="btn btn-info report-weather">Report Weather</button>
+        <ul id="local-reports" class="list-group mt-3">
+            {% for report in community_reports %}
+                <li class="list-group-item">{{ report }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

@@ -126,4 +126,4 @@ STATICFILES_DIRS = [BASE_DIR / "weather_app/static"]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Weather API key
-WEATHER_API_KEY = 'your_api_key_here'
+WEATHER_API_KEY = '1ec80da2f999f39661250a14fedb3420'

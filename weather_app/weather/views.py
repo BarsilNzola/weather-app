@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .utils import get_weather, clothing_recommendation, activity_recommendation
-from .models import SustainabilityTip
+from .models import SustainabilityTip, Badge
 
 def weather_dashboard(request):
     city = request.GET.get('city', 'Nairobi')
@@ -15,3 +15,11 @@ def weather_dashboard(request):
         'activity': activity,
         'tips': tips,
     })
+
+def award_badge(user, badge_name):
+    if not Badge.objects.filter(user=user, badge_name=badge_name).exists():
+        Badge.objects.create(user=user, badge_name=badge_name)
+
+# Example: Award "Weather Guru" badge
+if request.user.is_authenticated:
+    award_badge(request.user, "Weather Guru")
