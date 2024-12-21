@@ -41,6 +41,35 @@ h1, h4 {
     display: none;
 }
 
+.sustainability-tips {
+    background-color: #f9f9f9; /* Light grey background for contrast */
+    border-left: 5px solid #4caf50; /* Green accent border */
+    padding: 15px; /* Add spacing inside the box */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    border-radius: 8px; /* Rounded corners */
+}
+
+.sustainability-tips h3 {
+    font-size: 1.5rem;
+    color: #2d572c; /* Darker green for the header */
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.sustainability-tips h3::before {
+    content: "🌿"; /* Add an emoji or icon before the title */
+    margin-right: 10px;
+    font-size: 1.8rem;
+}
+
+.sustainability-tips p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555; /* Muted text for readability */
+    margin: 0;
+}
+
 .chatbot-container {
     border: 1px solid #ddd;
     border-radius: 10px;

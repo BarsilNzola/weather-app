@@ -95,44 +95,49 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }, 100);  // Delay in milliseconds (e.g., 100 ms)
     
-    // Weather History and Trends
+    
+    // Parse the historical weather data
     const historicalDataElement = document.getElementById('historical-data');
-    const historicalWeatherData = JSON.parse(historicalDataElement.textContent);
-
-    const labels = historicalWeatherData.map(item => item.date);
-    const temperatures = historicalWeatherData.map(item => item.temperature);
-
-    const ctx = document.getElementById('weatherHistoryChart').getContext('2d');
-    const weatherHistoryChart = new Chart(ctx, {
-        type: 'line', // You can use 'bar' or other chart types
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Temperature (°C)',
-                data: temperatures,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Date'
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Temperature (°C)'
+    try {
+        const historicalWeatherData = JSON.parse(historicalDataElement.textContent);
+    
+        const labels = historicalWeatherData.map(item => item.date);
+        const temperatures = historicalWeatherData.map(item => item.temperature);
+    
+        const ctx = document.getElementById('weatherHistoryChart').getContext('2d');
+        const weatherHistoryChart = new Chart(ctx, {
+            type: 'line', // You can use 'bar' or other chart types
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Temperature (°C)',
+                    data: temperatures,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Temperature (°C)'
+                        }
                     }
                 }
             }
-        }
-    });
+        });
+    } catch (error) {
+        console.error("Error parsing JSON data:", error);
+    }
 
     // Gamification: Badge Animation on Earned
     const badgeElements = document.querySelectorAll('.badge');

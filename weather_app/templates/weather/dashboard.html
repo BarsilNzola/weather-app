@@ -65,17 +65,18 @@
     <div class="my-4" id="weather-history">
         <h3>Weather History & Predictions</h3>
         <script id="historical-data" type="application/json">
-            {{ historical_data|escapejs }}
+            {{ historical_data|safe }}
         </script>
         <canvas id="weatherHistoryChart"></canvas>
     </div>
     
 
     <!-- Sustainability Tips -->
-    <div class="my-4">
-        <h3>Sustainability Tips</h3>
-        <p>{{ sustainability_tips }}</p>
+    <div class="sustainability-tips my-4 p-3 rounded shadow">
+        <h3 class="text-primary">🌱 Sustainability Tips</h3>
+        <p class="text-muted">{{ sustainability_tips }}</p>
     </div>
+
 
     <!-- Weather Chatbot -->
     <div class="my-4">
