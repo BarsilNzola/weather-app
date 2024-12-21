@@ -6,6 +6,25 @@ h1, h4 {
     color: #0056b3;
 }
 
+footer {
+    position: relative; /* Or fixed if you want it always at the bottom */
+    bottom: 0;
+    width: 100%;
+    background-color: #343a40; /* Dark background */
+    color: #f8f9fa; /* Light text */
+    font-size: 14px;
+}
+
+footer p {
+    margin: 0;
+    font-family: 'Roboto', sans-serif; /* Optional: match your font */
+}
+
+footer span.text-warning {
+    color: #ffc107; /* Gold for TheForeverKnights */
+}
+
+
 .card {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
