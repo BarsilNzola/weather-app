@@ -1,12 +1,11 @@
-from django.conf import settings
+from .utils import get_weather, get_historical_weather, clothing_recommendation, activity_recommendation, travel_tip, get_sustainability_tips, get_city_coordinates
+from weather.models import SustainabilityTip, WeatherData
+from django.utils.timezone import now
+from datetime import timedelta
 from django.core.serializers.json import DjangoJSONEncoder
 import json
+from django.conf import settings
 from django.shortcuts import render
-from datetime import timedelta
-from django.utils.timezone import now
-from django.contrib.auth.decorators import login_required
-from .utils import get_weather, get_historical_weather, clothing_recommendation, activity_recommendation, travel_tip, get_sustainability_tips
-from .models import SustainabilityTip, Badge, WeatherData
 
 def weather_dashboard(request):
     weather_data = None
@@ -20,6 +19,9 @@ def weather_dashboard(request):
 
     if request.method == 'POST':
         city = request.POST.get('city', 'Nairobi')  # Get city name from form input
+
+    # Clear existing historical data for the current city 
+    WeatherData.objects.filter(location=city).delete()
 
     # Fetch and store historical data 
     two_weeks_ago = now().date() - timedelta(weeks=2) 
@@ -38,7 +40,11 @@ def weather_dashboard(request):
                     temperature=temperature_max, # Max temperature for the day 
                     condition='N/A' # Open-Meteo does not provide specific weather conditions 
                 )
-    
+            else: 
+                print(f"No temperature data found for {city} on {date_to_fetch}") 
+        else: 
+            print(f"No historical weather data found for {city} on {date_to_fetch}")
+
     # Fetch weather data
     weather_data = get_weather(city)
 
@@ -59,9 +65,8 @@ def weather_dashboard(request):
         latitude = 0
         longitude = 0
     
-        
-    # Fetch historical weather data
-    historical_data = WeatherData.objects.filter(date__range=(two_weeks_ago, current_date)).order_by('-date')    
+    # Fetch historical weather data for the current city
+    historical_data = WeatherData.objects.filter(location=city, date__range=(two_weeks_ago, current_date)).order_by('-date')    
     
     # Convert to JSON
     historical_data_dicts = list(historical_data.values('location', 'date', 'temperature', 'condition')) 
@@ -81,17 +86,9 @@ def weather_dashboard(request):
         'sustainability_tips': sustainability_tips,
         'error_message': error_message,
     }
-    print(f"Context passed to template: {context}")
+
     return render(request, 'weather/dashboard.html', context)
 
-def award_badge(user, badge_name):
-    """
-    Awards a badge to a user if the badge doesn't already exist.
-    """
-    if not Badge.objects.filter(user=user, badge_name=badge_name).exists():
-        Badge.objects.create(user=user, badge_name=badge_name)
-
 # Alerts view
-@login_required
 def alerts(request):
     return render(request, 'weather/alerts.html')

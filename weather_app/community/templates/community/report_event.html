@@ -9,10 +9,15 @@
     <form method="post" class="needs-validation" novalidate>
         {% csrf_token %}
         <div class="form-group mb-3">
+            <label for="name">Your Name:</label>
+            <input type="text" id="name" name="name" class="form-control" placeholder="Enter your name" required>
+        </div>
+    
+        <div class="form-group mb-3">
             <label for="location">Location:</label>
             <input type="text" id="location" name="location" class="form-control" placeholder="Enter location" required>
         </div>
-
+    
         <div class="form-group mb-3">
             <label for="event_type">Event Type:</label>
             <select id="event_type" name="event_type" class="form-control" required>
@@ -22,13 +27,13 @@
                 <option value="heatwave">Heatwave</option>
             </select>
         </div>
-
+    
         <div class="form-group mb-3">
             <label for="description">Description:</label>
             <textarea id="description" name="description" class="form-control" placeholder="Provide details" rows="4" required></textarea>
         </div>
-
+    
         <button type="submit" class="btn btn-primary btn-block">Submit Report</button>
-    </form>
+    </form>    
 </div>
 {% endblock %}

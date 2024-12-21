@@ -94,50 +94,76 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error('mapDataElement is null');
         }
     }, 100);  // Delay in milliseconds (e.g., 100 ms)
+
+        // Define a global variable to hold the chart instance 
+        let weatherHistoryChart = null;
     
+        // Update the chart with new data
+        function updateChart(historicalWeatherData) {
+            const uniqueData = [];
+            const uniqueDates = new Set();
     
-    // Parse the historical weather data
-    const historicalDataElement = document.getElementById('historical-data');
-    try {
-        const historicalWeatherData = JSON.parse(historicalDataElement.textContent);
+            historicalWeatherData.forEach(item => {
+                if (!uniqueDates.has(item.date)) {
+                    uniqueData.push(item);
+                    uniqueDates.add(item.date);
+                }
+            });
     
-        const labels = historicalWeatherData.map(item => item.date);
-        const temperatures = historicalWeatherData.map(item => item.temperature);
+            console.log("Parsed Historical Data:", uniqueData);  // Debugging print
     
-        const ctx = document.getElementById('weatherHistoryChart').getContext('2d');
-        const weatherHistoryChart = new Chart(ctx, {
-            type: 'line', // You can use 'bar' or other chart types
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Temperature (°C)',
-                    data: temperatures,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Date'
-                        }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Temperature (°C)'
+            const labels = uniqueData.map(item => item.date);
+            const temperatures = uniqueData.map(item => item.temperature);
+    
+            const ctx = document.getElementById('weatherHistoryChart').getContext('2d');
+            
+            // Destroy the previous chart instance if it exists 
+            if (weatherHistoryChart) { 
+                weatherHistoryChart.destroy(); 
+            }
+    
+            window.weatherHistoryChart = new Chart(ctx, {
+                type: 'line', // You can use 'bar' or other chart types
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Temperature (°C)',
+                        data: temperatures,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Date'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Temperature (°C)'
+                            }
                         }
                     }
                 }
-            }
-        });
-    } catch (error) {
-        console.error("Error parsing JSON data:", error);
-    }
+            });
+        }
+    
+        // Fetch historical data and update chart on DOM load
+        const historicalDataElement = document.getElementById('historical-data');
+        try {
+            const historicalWeatherData = JSON.parse(historicalDataElement.textContent);
+            updateChart(historicalWeatherData);
+        } catch (error) {
+            console.error("Error parsing JSON data:", error);
+        }
+    
+    
 
     // Gamification: Badge Animation on Earned
     const badgeElements = document.querySelectorAll('.badge');
@@ -199,4 +225,4 @@ document.addEventListener("DOMContentLoaded", () => {
             chatbotMessages.scrollTop = chatbotMessages.scrollHeight; // Scroll to the latest message
         }
     });
-})
+});
