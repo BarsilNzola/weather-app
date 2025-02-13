@@ -1,3 +1,4 @@
+import requests
 from .utils import get_weather, get_historical_weather, clothing_recommendation, activity_recommendation, travel_tip, get_sustainability_tips, get_city_coordinates
 from weather.models import SustainabilityTip, WeatherData
 from django.utils.timezone import now
@@ -7,6 +8,13 @@ import json
 from django.conf import settings
 from django.shortcuts import render
 
+# Function to get city based on user's IP address
+def get_user_city(request):
+    ip = request.META.get('REMOTE_ADDR')
+    response = requests.get(f"http://ip-api.com/json/{ip}")
+    city = response.json().get('city', 'Nairobi')  # Default to Nairobi if location is not found
+    return city
+
 def weather_dashboard(request):
     weather_data = None
     recommendations = {
@@ -15,10 +23,9 @@ def weather_dashboard(request):
         'travel': "No recommendation available.",
     }
     error_message = None
-    city = "Nairobi"  # Default city
-
-    if request.method == 'POST':
-        city = request.POST.get('city', 'Nairobi')  # Get city name from form input
+    
+    # Use the city from the form if it exists, else use the IP-based city
+    city = request.POST.get('city', get_user_city(request))  # Default to IP-based city if not set in form
 
     # Clear existing historical data for the current city 
     WeatherData.objects.filter(location=city).delete()
