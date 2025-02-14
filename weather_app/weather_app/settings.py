@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-wh$mvc!mv@p88=sb)y+v&l+#^@%j1319_mf@icz73$q*cigf9t
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ["https://weatheria-wlco.onrender.com"]
+ALLOWED_HOSTS = ['weatheria-wlco.onrender.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
