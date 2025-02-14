@@ -1,0 +1,14 @@
+.container {
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+h1, h2 {
+    color: #007BFF; /* Matches primary Bootstrap color */
+}
+
+.list-group-item p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #555;
+}
