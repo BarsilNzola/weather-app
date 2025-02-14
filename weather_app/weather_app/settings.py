@@ -13,6 +13,7 @@ import os
 import dj_database_url
 from dotenv import load_dotenv
 from pathlib import Path
+from decouple import config  # For .env file support
 
 load_dotenv()  # Load environment variables from .env
 
@@ -27,9 +28,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-wh$mvc!mv@p88=sb)y+v&l+#^@%j1319_mf@icz73$q*cigf9t'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["weather_app.onrender.com"]
 
 
 # Application definition
@@ -81,7 +82,7 @@ WSGI_APPLICATION = 'weather_app.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(default=f'sqlite:///{BASE_DIR / "db.sqlite3"}')
+    'default': dj_database_url.config(default=config('DATABASE_URL'))
 }
 
 
@@ -119,7 +120,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "weather_app/static"]
 
