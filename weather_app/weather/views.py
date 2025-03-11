@@ -5,6 +5,7 @@ from django.utils.timezone import now
 from datetime import timedelta
 from django.core.serializers.json import DjangoJSONEncoder
 import json
+from django.http import JsonResponse
 from django.conf import settings
 from django.shortcuts import render
 
@@ -25,7 +26,7 @@ def weather_dashboard(request):
     error_message = None
     
     # Use the city from the form if it exists, else use the IP-based city
-    city = request.POST.get('city', get_user_city(request))  # Default to IP-based city if not set in form
+    city = request.GET.get('city', get_user_city(request))  # Use GET for API calls
 
     # Clear existing historical data for the current city 
     WeatherData.objects.filter(location=city).delete()
@@ -82,6 +83,23 @@ def weather_dashboard(request):
     # Other context data
     sustainability_tips = get_sustainability_tips()
     
+    # Prepare response data
+    response_data = {
+        'weather': weather_data,
+        'recommendations': recommendations,
+        'location': city,
+        'latitude': latitude,
+        'longitude': longitude,
+        'historical_data': historical_data_json,
+        'sustainability_tips': sustainability_tips,
+        'error_message': error_message,
+    }
+
+    # Return JSON response for API calls
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.GET.get('format') == 'json':
+        return JsonResponse(response_data)
+
+    # Render HTML template for web requests
     context = {
         'weather': weather_data,
         'recommendations': recommendations,
@@ -93,7 +111,6 @@ def weather_dashboard(request):
         'sustainability_tips': sustainability_tips,
         'error_message': error_message,
     }
-
     return render(request, 'weather/dashboard.html', context)
 
 # Alerts view
